@@ -1,16 +1,17 @@
-import "dotenv/config";
 import cors from "cors";
 import morgan from "morgan";
 import express, { Application } from "express";
 
+import { envs } from "./config/envs";
+
 class Server {
   private app: Application;
-  private port: string;
+  private port: number;
   private apiRoutes = {};
 
   constructor() {
     this.app = express();
-    this.port = process.env.PORT || "8000";
+    this.port = envs.PORT || 8000;
 
     this.middlewares();
     this.routes();
@@ -27,7 +28,7 @@ class Server {
   listen() {
     this.app.listen(this.port, () => {
       console.log(`🚀 App running on port ${this.port}`);
-      console.log(`Running in ${process.env.NODE_ENV}`);
+      console.log(`Running in ${envs.NODE_ENV}`);
     });
   }
 }
