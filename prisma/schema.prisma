@@ -14,3 +14,14 @@ model User {
   password     String   @db.VarChar(65)
   isDarkModeOn Boolean? @map("is_dark_mode_on")
 }
+
+model Schedule {
+  id         Int       @id @default(autoincrement())
+  city       String    @db.VarChar(255)
+  sector     String    @db.VarChar(255)
+  schedule   String    @db.VarChar(15)
+  lastUpdate DateTime? @map("last_update")
+  link       String?   @db.Text
+
+  @@index([city, sector])
+}
