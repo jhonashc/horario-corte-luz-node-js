@@ -17,7 +17,7 @@ export class ScheduleService {
 
       const findScheduleCounter = this.prisma.schedule.count();
 
-      const findSchedules = await this.prisma.schedule.findMany({
+      const findSchedules = this.prisma.schedule.findMany({
         take: limit,
         skip: (page - 1) * limit,
       });
