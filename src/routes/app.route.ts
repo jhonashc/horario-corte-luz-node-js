@@ -1,12 +1,14 @@
 import { Router } from "express";
 
-import { Authroutes } from "./auth.route";
+import { AuthRoutes } from "./auth.route";
+import { ScheduleRoutes } from "./schedule.route";
 
 export class AppRoutes {
   static get routes(): Router {
     const router = Router();
 
-    router.use("/api/v1/auth", Authroutes.routes);
+    router.use("/api/v1/auth", AuthRoutes.routes);
+    router.use("/api/v1/schedules", ScheduleRoutes.routes);
 
     return router;
   }

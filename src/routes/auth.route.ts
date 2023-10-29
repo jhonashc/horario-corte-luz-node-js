@@ -4,7 +4,7 @@ import { AuthController } from "../controllers";
 
 import { AuthService } from "../services";
 
-export class Authroutes {
+export class AuthRoutes {
   static get routes(): Router {
     const router = Router();
 
