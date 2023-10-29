@@ -19,7 +19,7 @@ model Schedule {
   id         Int       @id @default(autoincrement())
   city       String    @db.VarChar(255)
   sector     String    @db.VarChar(255)
-  schedule   String    @db.VarChar(15)
+  schedule   String    @db.VarChar(120)
   lastUpdate DateTime? @map("last_update")
   link       String?   @db.Text
 
