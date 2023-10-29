@@ -8,8 +8,9 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  username String @db.VarChar(40)
-  email    String @unique @db.VarChar(255)
-  password String @db.VarChar(45)
+  id           Int      @id @default(autoincrement())
+  username     String   @db.VarChar(40)
+  email        String   @unique @db.VarChar(255)
+  password     String   @db.VarChar(65)
+  isDarkModeOn Boolean? @map("is_dark_mode_on")
 }
