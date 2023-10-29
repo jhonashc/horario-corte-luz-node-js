@@ -8,20 +8,35 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  username     String   @db.VarChar(40)
-  email        String   @unique @db.VarChar(255)
-  password     String   @db.VarChar(65)
-  isDarkModeOn Boolean? @map("is_dark_mode_on")
+  id           Int            @id @default(autoincrement())
+  username     String         @db.VarChar(40)
+  email        String         @unique @db.VarChar(255)
+  password     String         @db.VarChar(65)
+  isDarkModeOn Boolean?       @map("is_dark_mode_on")
+  schedules    UserSchedule[]
+  @@map("user")
 }
 
 model Schedule {
-  id         Int       @id @default(autoincrement())
-  city       String    @db.VarChar(255)
-  sector     String    @db.VarChar(255)
-  schedule   String    @db.VarChar(120)
-  lastUpdate DateTime? @map("last_update")
-  link       String?   @db.Text
+  id         Int            @id @default(autoincrement())
+  city       String         @db.VarChar(255)
+  sector     String         @db.VarChar(255)
+  schedule   String         @db.VarChar(120)
+  lastUpdate DateTime?      @map("last_update")
+  link       String?        @db.Text
+  users      UserSchedule[]
 
   @@index([city, sector])
+  @@map("schedule")
+}
+
+model UserSchedule {
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int      @map("user_id")
+  schedule   Schedule @relation(fields: [scheduleId], references: [id])
+  scheduleId Int      @map("schedule_id")
+  name       String   @db.VarChar(255)
+
+  @@id([userId, scheduleId])
+  @@map("user_schedule")
 }
