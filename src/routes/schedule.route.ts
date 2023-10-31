@@ -2,6 +2,10 @@ import { Router } from "express";
 
 import { ScheduleController } from "../controllers";
 
+import { validateRequest } from "../middlewares";
+
+import { getSchedulesSchema } from "../schemas";
+
 import { ScheduleService } from "../services";
 
 export class ScheduleRoutes {
@@ -12,7 +16,11 @@ export class ScheduleRoutes {
 
     const controller = new ScheduleController(scheduleService);
 
-    router.get("/", controller.getSchedules);
+    router.get(
+      "/",
+      validateRequest(getSchedulesSchema, "query"),
+      controller.getSchedules
+    );
 
     return router;
   }
