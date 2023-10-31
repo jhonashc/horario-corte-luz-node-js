@@ -2,6 +2,10 @@ import { Router } from "express";
 
 import { AuthController } from "../controllers";
 
+import { validateRequest } from "../middlewares";
+
+import { loginUserSchema, registerUserSchema } from "../schemas";
+
 import { AuthService } from "../services";
 
 export class AuthRoutes {
@@ -12,9 +16,17 @@ export class AuthRoutes {
 
     const controller = new AuthController(authService);
 
-    router.post("/register", controller.registerUser);
+    router.post(
+      "/register",
+      validateRequest(registerUserSchema, "body"),
+      controller.registerUser
+    );
 
-    router.post("/login", controller.loginUser);
+    router.post(
+      "/login",
+      validateRequest(loginUserSchema, "body"),
+      controller.loginUser
+    );
 
     return router;
   }
