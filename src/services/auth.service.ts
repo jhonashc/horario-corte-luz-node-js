@@ -21,24 +21,23 @@ export class AuthService {
     });
 
     if (userFound) {
-      throw CustomError.badRequest("El correo electrónico ya está ocupado");
+      throw CustomError.conflict(
+        "La dirección de correo electrónico ya se encuentra en uso."
+      );
     }
 
-    try {
-      const newUser: User = await this.prisma.user.create({
-        data: {
-          ...registerUserDto,
-          password: await encryptPassword(registerUserDto.password),
-        },
-      });
+    const newUser: User = await this.prisma.user.create({
+      data: {
+        ...registerUserDto,
+        password: await encryptPassword(registerUserDto.password),
+      },
+    });
 
-      return {
-        username: newUser.username,
-        isDarkModeOn: newUser.isDarkModeOn ?? null,
-      };
-    } catch (error) {
-      throw CustomError.internalServer(`${error}`);
-    }
+    return {
+      id: newUser.id,
+      username: newUser.username,
+      isDarkModeOn: newUser.isDarkModeOn ?? null,
+    };
   }
 
   public async loginUser(loginUserDto: LoginUserDto) {
@@ -49,8 +48,8 @@ export class AuthService {
     });
 
     if (!userFound) {
-      throw CustomError.badRequest(
-        "El correo electrónico o la contraseña son incorrectos"
+      throw CustomError.unauthorized(
+        "El correo electrónico o la contraseña son incorrectos."
       );
     }
 
@@ -60,12 +59,13 @@ export class AuthService {
     );
 
     if (!comparedPasswords) {
-      throw CustomError.badRequest(
-        "El correo electrónico o la contraseña son incorrectos"
+      throw CustomError.unauthorized(
+        "El correo electrónico o la contraseña son incorrectos."
       );
     }
 
     return {
+      id: userFound.id,
       username: userFound.username,
       isDarkModeOn: userFound.isDarkModeOn ?? null,
     };
