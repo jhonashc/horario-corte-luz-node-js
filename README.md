@@ -14,6 +14,11 @@ Place a description here.
    ```bash
    $ npm install
    ```
+1. Run migrations:
+   ```bash
+   $ npx prisma migrate dev
+   $ npx prisma generate
+   ```
 1. Running the app:
 
    ```bash
