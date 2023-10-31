@@ -1,11 +1,11 @@
 import Joi from "joi";
 
 const registerUserMessages = {
-  "string.base": "El campo {#label} debe ser un string",
-  "string.empty": "El campo {#label} no debe estar vacío",
-  "string.email": "El campo {#label} debe ser un correo electrónico válido",
-  "string.max": "El campo {#label} no debe exceder los {#limit} caracteres",
-  "any.required": "El campo {#label} es obligatorio",
+  "string.base": "El campo {#label} debe ser una cadena de texto.",
+  "string.empty": "El campo {#label} no debe estar vacío.",
+  "string.email": "El campo {#label} debe ser un correo electrónico válido.",
+  "string.max": "El campo {#label} no debe exceder los {#limit} caracteres.",
+  "any.required": "El campo {#label} es obligatorio.",
 };
 
 export const registerUserSchema = Joi.object()
