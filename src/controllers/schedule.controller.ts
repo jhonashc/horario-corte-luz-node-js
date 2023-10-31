@@ -21,12 +21,16 @@ export class ScheduleController {
 
   getSchedules = (req: Request, res: Response) => {
     const { page = 1, limit = 10 } = req.query;
+
+    const city = req.query.city as string;
+    const sector = req.query.sector as string;
+
     const [error, paginationDto] = PaginationDto.create(+page, +limit);
 
     if (error) return res.status(400).json({ error });
 
     this.scheduleService
-      .getSchedules(paginationDto!)
+      .getSchedules(paginationDto!, city, sector)
       .then((schedules) => res.json(schedules))
       .catch((error) => this.handleError(error, res));
   };
