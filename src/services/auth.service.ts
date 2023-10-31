@@ -34,9 +34,12 @@ export class AuthService {
     });
 
     return {
-      id: newUser.id,
-      username: newUser.username,
-      isDarkModeOn: newUser.isDarkModeOn ?? null,
+      status: true,
+      user: {
+        id: newUser.id,
+        username: newUser.username,
+        isDarkModeOn: newUser.isDarkModeOn ?? null,
+      },
     };
   }
 
@@ -65,9 +68,12 @@ export class AuthService {
     }
 
     return {
-      id: userFound.id,
-      username: userFound.username,
-      isDarkModeOn: userFound.isDarkModeOn ?? null,
+      status: true,
+      user: {
+        id: userFound.id,
+        username: userFound.username,
+        isDarkModeOn: userFound.isDarkModeOn ?? null,
+      },
     };
   }
 }
