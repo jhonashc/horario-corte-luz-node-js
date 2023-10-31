@@ -11,13 +11,25 @@ export class ScheduleService {
     this.prisma = new PrismaClient();
   }
 
-  public async getSchedules(paginationDto: PaginationDto) {
+  public async getSchedules(
+    paginationDto: PaginationDto,
+    searchCity?: string,
+    searchedSector?: string
+  ) {
     try {
       const { page, limit } = paginationDto;
 
       const findScheduleCounter = this.prisma.schedule.count();
 
       const findSchedules = this.prisma.schedule.findMany({
+        where: {
+          city: {
+            contains: searchCity,
+          },
+          sector: {
+            contains: searchedSector,
+          },
+        },
         take: limit,
         skip: (page - 1) * limit,
       });
