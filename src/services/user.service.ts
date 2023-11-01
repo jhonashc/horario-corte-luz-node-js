@@ -1,6 +1,6 @@
 import { PrismaClient, Schedule, User, UserSchedule } from "@prisma/client";
 
-import { CreateUserScheduleDto } from "../dtos";
+import { CreateUserScheduleDto, GetUserSchedulesDto } from "../dtos";
 
 import { CustomError } from "../errors/custom.error";
 
@@ -70,6 +70,39 @@ export class UserService {
       status: true,
       message: "El horario ha sido guardado con éxito.",
       data: createdUserSchedule,
+    };
+  }
+
+  public async getUserSchedules(
+    userId: number,
+    getUserSchedulesDto: GetUserSchedulesDto
+  ) {
+    const { name: nameToSearch, page = 1, limit = 20 } = getUserSchedulesDto;
+
+    const findUserScheduleCounter = this.prisma.userSchedule.count();
+
+    const findUserSchedules = this.prisma.userSchedule.findMany({
+      where: {
+        userId,
+        name: {
+          contains: nameToSearch,
+        },
+      },
+      take: limit,
+      skip: (page - 1) * limit,
+    });
+
+    const [totalItems, userSchedules] = await Promise.all([
+      findUserScheduleCounter,
+      findUserSchedules,
+    ]);
+
+    return {
+      status: true,
+      page,
+      limit,
+      totalItems,
+      data: userSchedules,
     };
   }
 }
