@@ -13,8 +13,8 @@ export class ScheduleController {
     const getSchedulesDto = {
       city,
       sector,
-      page,
-      limit,
+      page: page && +page,
+      limit: limit && +limit,
     } as GetSchedulesDto;
 
     this.scheduleService
