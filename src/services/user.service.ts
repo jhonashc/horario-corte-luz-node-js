@@ -57,19 +57,22 @@ export class UserService {
       );
     }
 
-    const createdUserSchedule: UserSchedule =
-      await this.prisma.userSchedule.create({
-        data: {
-          name,
-          userId,
-          scheduleId,
-        },
-      });
+    await this.prisma.userSchedule.create({
+      data: {
+        name,
+        userId,
+        scheduleId,
+      },
+    });
 
     return {
       status: true,
       message: "El horario ha sido guardado con éxito.",
-      data: createdUserSchedule,
+      data: {
+        userId,
+        name,
+        schedule: scheduleFound,
+      },
     };
   }
 
@@ -88,6 +91,9 @@ export class UserService {
               contains: nameToSearch,
             },
           },
+          include: {
+            schedule: true,
+          },
           take: limit,
           skip: (page - 1) * limit,
         }),
@@ -99,7 +105,11 @@ export class UserService {
       page,
       limit,
       totalItems: userSchedulesCounter,
-      data: userSchedules,
+      data: userSchedules.map((userSchedule) => ({
+        userId,
+        name: userSchedule.name,
+        schedule: userSchedule.schedule,
+      })),
     };
   }
 }
