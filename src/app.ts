@@ -2,7 +2,7 @@ import cors from "cors";
 import morgan from "morgan";
 import express, { Application } from "express";
 
-import { envs } from "./config/envs";
+import { envs } from "./config/envs.config";
 
 import { exceptionHandler } from "./middlewares";
 
