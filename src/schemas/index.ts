@@ -7,3 +7,4 @@ export * from "./shared/pagination.schema";
 
 export * from "./user/create-user-schedule.schema";
 export * from "./user/user-params.schema";
+export * from "./user/user-query.schema";
