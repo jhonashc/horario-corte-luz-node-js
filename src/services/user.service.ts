@@ -25,7 +25,7 @@ export class UserService {
 
     if (!userFound) {
       throw CustomError.notFound(
-        `No se ha encontrado al usuario con el ID ${userId}`
+        `No se ha encontrado al usuario con el ID ${userId}.`
       );
     }
 
@@ -39,7 +39,7 @@ export class UserService {
 
     if (!scheduleFound) {
       throw CustomError.notFound(
-        `No se ha encontrado el horario con el ID ${userId}`
+        `No se ha encontrado el horario con el ID ${userId}.`
       );
     }
 
@@ -79,29 +79,26 @@ export class UserService {
   ) {
     const { name: nameToSearch, page = 1, limit = 20 } = getUserSchedulesDto;
 
-    const findUserScheduleCounter = this.prisma.userSchedule.count();
-
-    const findUserSchedules = this.prisma.userSchedule.findMany({
-      where: {
-        userId,
-        name: {
-          contains: nameToSearch,
-        },
-      },
-      take: limit,
-      skip: (page - 1) * limit,
-    });
-
-    const [totalItems, userSchedules] = await Promise.all([
-      findUserScheduleCounter,
-      findUserSchedules,
-    ]);
+    const [userSchedules, userSchedulesCounter] =
+      await this.prisma.$transaction([
+        this.prisma.userSchedule.findMany({
+          where: {
+            userId,
+            name: {
+              contains: nameToSearch,
+            },
+          },
+          take: limit,
+          skip: (page - 1) * limit,
+        }),
+        this.prisma.userSchedule.count(),
+      ]);
 
     return {
       status: true,
       page,
       limit,
-      totalItems,
+      totalItems: userSchedulesCounter,
       data: userSchedules,
     };
   }
