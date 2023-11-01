@@ -8,15 +8,17 @@ export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
 
   getSchedules = (req: Request, res: Response, next: NextFunction) => {
-    const { city, sector, page, limit } = req.query as GetSchedulesDto;
+    const { city, sector, page, limit } = req.query;
+
+    const getSchedulesDto = {
+      city,
+      sector,
+      page,
+      limit,
+    } as GetSchedulesDto;
 
     this.scheduleService
-      .getSchedules({
-        city,
-        sector,
-        page: page && +page,
-        limit: limit && +limit,
-      })
+      .getSchedules(getSchedulesDto)
       .then((schedules) => res.json(schedules))
       .catch((error) => next(error));
   };
