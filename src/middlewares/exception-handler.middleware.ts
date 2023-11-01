@@ -19,6 +19,6 @@ export const exceptionHandler = (
 
   return res.status(500).json({
     status: false,
-    message: "Algo salió mal, inténtalo de nuevo más tarde",
+    message: "Algo salió mal, inténtalo de nuevo más tarde.",
   });
 };

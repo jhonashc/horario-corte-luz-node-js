@@ -17,31 +17,27 @@ export class ScheduleService {
       limit = 20,
     } = getSchedulesDto;
 
-    const findScheduleCounter = this.prisma.schedule.count();
-
-    const findSchedules = this.prisma.schedule.findMany({
-      where: {
-        city: {
-          contains: cityToSearch,
+    const [schedules, scheduleCounter] = await this.prisma.$transaction([
+      this.prisma.schedule.findMany({
+        where: {
+          city: {
+            contains: cityToSearch,
+          },
+          sector: {
+            contains: sectorToSearch,
+          },
         },
-        sector: {
-          contains: sectorToSearch,
-        },
-      },
-      take: limit,
-      skip: (page - 1) * limit,
-    });
-
-    const [totalItems, schedules] = await Promise.all([
-      findScheduleCounter,
-      findSchedules,
+        take: limit,
+        skip: (page - 1) * limit,
+      }),
+      this.prisma.schedule.count(),
     ]);
 
     return {
       status: true,
       page,
       limit,
-      totalItems,
+      totalItems: scheduleCounter,
       data: schedules,
     };
   }
