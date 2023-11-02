@@ -2,7 +2,7 @@ import { PrismaClient, User } from "@prisma/client";
 
 import { LoginUserDto, RegisterUserDto } from "../dtos";
 
-import { comparePasswords, encryptPassword } from "../helpers";
+import { BcryptHelper } from "../helpers";
 
 import { CustomError } from "../errors/custom.error";
 
@@ -28,7 +28,9 @@ export class AuthService {
       );
     }
 
-    const encrytepPassword: string = await encryptPassword(password);
+    const encrytepPassword: string = await BcryptHelper.encryptPassword(
+      password
+    );
 
     const newUser: User = await this.prisma.user.create({
       data: {
@@ -63,7 +65,7 @@ export class AuthService {
       );
     }
 
-    const comparedPasswords: boolean = await comparePasswords(
+    const comparedPasswords: boolean = await BcryptHelper.comparePasswords(
       password,
       userFound.password
     );
