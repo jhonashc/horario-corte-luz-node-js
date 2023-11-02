@@ -16,7 +16,7 @@ export const validateRequest = (schema: Schema, requestType: RequestType) => {
 
         const message: string = details
           .map((detail) => detail.message.replace(/['"]/g, ""))
-          .join(",");
+          .join("|");
 
         throw CustomError.badRequest(message);
       }
