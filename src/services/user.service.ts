@@ -91,7 +91,9 @@ export class UserService {
               contains: nameToSearch,
             },
           },
-          include: {
+          select: {
+            userId: true,
+            name: true,
             schedule: true,
           },
           take: limit,
@@ -105,11 +107,7 @@ export class UserService {
       page,
       limit,
       totalItems: userSchedulesCounter,
-      data: userSchedules.map((userSchedule) => ({
-        userId,
-        name: userSchedule.name,
-        schedule: userSchedule.schedule,
-      })),
+      data: userSchedules,
     };
   }
 }
