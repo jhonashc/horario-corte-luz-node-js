@@ -14,9 +14,11 @@ export class AuthService {
   }
 
   public async registerUser(registerUserDto: RegisterUserDto) {
+    const { username, email, password } = registerUserDto;
+
     const userFound: User | null = await this.prisma.user.findFirst({
       where: {
-        email: registerUserDto.email,
+        email,
       },
     });
 
@@ -26,10 +28,13 @@ export class AuthService {
       );
     }
 
+    const encrytepPassword: string = await encryptPassword(password);
+
     const newUser: User = await this.prisma.user.create({
       data: {
-        ...registerUserDto,
-        password: await encryptPassword(registerUserDto.password),
+        username,
+        email,
+        password: encrytepPassword,
       },
     });
 
@@ -44,9 +49,11 @@ export class AuthService {
   }
 
   public async loginUser(loginUserDto: LoginUserDto) {
+    const { email, password } = loginUserDto;
+
     const userFound: User | null = await this.prisma.user.findFirst({
       where: {
-        email: loginUserDto.email,
+        email,
       },
     });
 
@@ -57,7 +64,7 @@ export class AuthService {
     }
 
     const comparedPasswords: boolean = await comparePasswords(
-      loginUserDto.password,
+      password,
       userFound.password
     );
 
