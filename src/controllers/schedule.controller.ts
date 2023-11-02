@@ -8,14 +8,14 @@ export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
 
   getSchedules = (req: Request, res: Response, next: NextFunction) => {
-    const { city, sector, page, limit } = req.query;
+    const { city, sector, page, limit } = req.query as GetSchedulesDto;
 
-    const getSchedulesDto = {
-      city,
-      sector,
+    const getSchedulesDto: GetSchedulesDto = {
+      city: city?.trim(),
+      sector: sector?.trim(),
       page: page && +page,
       limit: limit && +limit,
-    } as GetSchedulesDto;
+    };
 
     this.scheduleService
       .getSchedules(getSchedulesDto)

@@ -8,13 +8,13 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   registerUser = (req: Request, res: Response, next: NextFunction) => {
-    const { username, email, password } = req.body;
+    const { username, email, password } = req.body as RegisterUserDto;
 
-    const registerUserDto = {
-      username,
-      email,
-      password,
-    } as RegisterUserDto;
+    const registerUserDto: RegisterUserDto = {
+      username: username.trim(),
+      email: email.toLowerCase().trim(),
+      password: password.trim(),
+    };
 
     this.authService
       .registerUser(registerUserDto)
@@ -23,12 +23,12 @@ export class AuthController {
   };
 
   loginUser = (req: Request, res: Response, next: NextFunction) => {
-    const { email, password } = req.body;
+    const { email, password } = req.body as LoginUserDto;
 
-    const loginUserDto = {
-      email,
-      password,
-    } as LoginUserDto;
+    const loginUserDto: LoginUserDto = {
+      email: email.toLowerCase().trim(),
+      password: password.trim(),
+    };
 
     this.authService
       .loginUser(loginUserDto)

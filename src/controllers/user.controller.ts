@@ -9,12 +9,12 @@ export class UserController {
 
   createUserSchedule = (req: Request, res: Response, next: NextFunction) => {
     const { userId } = req.params;
-    const { name, scheduleId } = req.body;
+    const { name, scheduleId } = req.body as CreateUserScheduleDto;
 
-    const createUserScheduleDto = {
-      name,
+    const createUserScheduleDto: CreateUserScheduleDto = {
+      name: name.trim(),
       scheduleId,
-    } as CreateUserScheduleDto;
+    };
 
     this.userService
       .createUserSchedule(+userId, createUserScheduleDto)
@@ -24,13 +24,13 @@ export class UserController {
 
   getUserSchedules = (req: Request, res: Response, next: NextFunction) => {
     const { userId } = req.params;
-    const { name, page, limit } = req.query;
+    const { name, page, limit } = req.query as GetUserSchedulesDto;
 
-    const getUserSchedulesDto = {
-      name,
+    const getUserSchedulesDto: GetUserSchedulesDto = {
+      name: name?.trim(),
       page: page && +page,
       limit: limit && +limit,
-    } as GetUserSchedulesDto;
+    };
 
     this.userService
       .getUserSchedules(+userId, getUserSchedulesDto)
