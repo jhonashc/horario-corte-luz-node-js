@@ -24,4 +24,4 @@ export const userScheduleSchema = Joi.object()
       .required()
       .messages(scheduleIdMessages),
   })
-  .options({ abortEarly: false });
+  .options({ abortEarly: false, stripUnknown: true });

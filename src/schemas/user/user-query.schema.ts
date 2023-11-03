@@ -12,4 +12,4 @@ export const getUserSchedulesSchema = paginationSchema
     name: Joi.string().optional(),
   })
   .messages(getUserSchedulesMessages)
-  .options({ abortEarly: false });
+  .options({ abortEarly: false, stripUnknown: true });

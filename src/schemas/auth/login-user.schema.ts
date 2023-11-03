@@ -14,4 +14,4 @@ export const loginUserSchema = Joi.object()
     password: Joi.string().max(65).required(),
   })
   .messages(loginUserMessages)
-  .options({ abortEarly: false });
+  .options({ abortEarly: false, stripUnknown: true });

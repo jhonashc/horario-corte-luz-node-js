@@ -15,4 +15,4 @@ export const registerUserSchema = Joi.object()
     password: Joi.string().max(65).required(),
   })
   .messages(registerUserMessages)
-  .options({ abortEarly: false });
+  .options({ abortEarly: false, stripUnknown: true });

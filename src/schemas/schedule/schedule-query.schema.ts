@@ -13,4 +13,4 @@ export const getSchedulesSchema = paginationSchema
     sector: Joi.string().optional(),
   })
   .messages(getSchedulesMessages)
-  .options({ abortEarly: false });
+  .options({ abortEarly: false, stripUnknown: true });

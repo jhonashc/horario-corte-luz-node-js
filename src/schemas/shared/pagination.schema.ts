@@ -17,4 +17,4 @@ export const paginationSchema = Joi.object()
     limit: Joi.number().integer().min(minLimit).max(maxLimit).optional(),
   })
   .messages(paginationMessages)
-  .options({ abortEarly: false });
+  .options({ abortEarly: false, stripUnknown: true });

@@ -15,4 +15,4 @@ export const userIdParamSchema = Joi.object()
       .required()
       .messages(userIdMessages),
   })
-  .options({ abortEarly: false });
+  .options({ abortEarly: false, stripUnknown: true });
