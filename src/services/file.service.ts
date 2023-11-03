@@ -1,7 +1,5 @@
 import { PrismaClient, Schedule } from "@prisma/client";
 
-import { CustomError } from "../errors/custom.error";
-
 export class FileService {
   private readonly prisma: PrismaClient;
 
@@ -9,49 +7,22 @@ export class FileService {
     this.prisma = new PrismaClient();
   }
 
-  public async uploadSingle(file: Express.Multer.File) {
-    if (!file) {
-      throw CustomError.badRequest("Debe seleccionar un archivo.");
-    }
-
-    const schedulesAsString: string = file.buffer.toString();
-
-    if (schedulesAsString.trim() === "") {
-      throw CustomError.badRequest("El archivo JSON está vacío.");
-    }
-
-    const newSchedules: Schedule[] = JSON.parse(schedulesAsString);
-
-    if (!Array.isArray(newSchedules)) {
-      throw CustomError.badRequest(
-        "El contenido proporcionado no cumple con el formato esperado de un arreglo de horarios."
-      );
-    }
-
-    const scheduleCounter: number = newSchedules.length;
-
-    const areTheFieldsValid: boolean = newSchedules.every(
-      ({ city, sector, schedule }) => city && sector && schedule
-    );
-
-    if (scheduleCounter === 0 || !areTheFieldsValid) {
-      throw CustomError.badRequest(
-        "Asegúrese de incluir todas las propiedades requeridas en cada horario."
-      );
-    }
+  public async uploadSingle({ buffer }: Express.Multer.File) {
+    const newSchedules: Schedule[] = JSON.parse(buffer.toString());
 
     const updatedSchedules: Promise<Schedule | null>[] = newSchedules.map(
       async (newSchedule) => {
-        const scheduleFound = await this.prisma.schedule.findFirst({
-          where: {
-            city: {
-              contains: newSchedule.city,
+        const scheduleFound: Schedule | null =
+          await this.prisma.schedule.findFirst({
+            where: {
+              city: {
+                contains: newSchedule.city,
+              },
+              sector: {
+                contains: newSchedule.sector,
+              },
             },
-            sector: {
-              contains: newSchedule.sector,
-            },
-          },
-        });
+          });
 
         if (!scheduleFound) return newSchedule;
 
@@ -61,7 +32,8 @@ export class FileService {
           },
           data: {
             schedule: newSchedule.schedule,
-            lastUpdate: newSchedule.lastUpdate,
+            lastUpdate:
+              newSchedule.lastUpdate && new Date(newSchedule.lastUpdate),
             link: newSchedule.link,
           },
         });
@@ -70,7 +42,7 @@ export class FileService {
       }
     );
 
-    const mismatchedSchedules: Array<Schedule | null> = await Promise.all(
+    const mismatchedSchedules: (Schedule | null)[] = await Promise.all(
       updatedSchedules
     );
 
@@ -78,6 +50,7 @@ export class FileService {
       Boolean
     ) as Schedule[];
 
+    const scheduleCounter: number = newSchedules.length;
     const updatedCounter: number = scheduleCounter - filteredMismatched.length;
 
     return {
