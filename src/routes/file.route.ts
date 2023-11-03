@@ -2,7 +2,9 @@ import { Router } from "express";
 
 import { FileController } from "../controllers";
 
-import { uploader } from "../middlewares";
+import { uploader, validateFile } from "../middlewares";
+
+import { uploadFileSchema } from "../schemas";
 
 import { FileService } from "../services";
 
@@ -14,7 +16,12 @@ export class FileRoutes {
 
     const controller = new FileController(fileService);
 
-    router.post("/single", uploader.single("file"), controller.uploadFile);
+    router.post(
+      "/",
+      uploader.single("file"),
+      validateFile(uploadFileSchema),
+      controller.uploadFile
+    );
 
     return router;
   }
