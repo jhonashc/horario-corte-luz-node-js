@@ -23,9 +23,9 @@ Place a description here.
 
    ```bash
    # development mode
-   $ npm dev
+   $ npm run dev
 
    # production mode
-   $ npm build
+   $ npm run build
    $ npm start
    ```
