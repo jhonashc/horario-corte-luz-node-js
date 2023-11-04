@@ -2,9 +2,13 @@ import { Router } from "express";
 
 import { ScheduleController } from "../controllers";
 
-import { validateRequest } from "../middlewares";
+import {
+  uploader,
+  validateRequest,
+  validateScheduleFile,
+} from "../middlewares";
 
-import { getSchedulesSchema } from "../schemas";
+import { getSchedulesSchema, updateSchedulesSchema } from "../schemas";
 
 import { ScheduleService } from "../services";
 
@@ -20,6 +24,13 @@ export class ScheduleRoutes {
       "/",
       validateRequest(getSchedulesSchema, "query"),
       controller.getSchedules
+    );
+
+    router.patch(
+      "/",
+      uploader.single("file"),
+      validateScheduleFile(updateSchedulesSchema),
+      controller.updateSchedules
     );
 
     return router;

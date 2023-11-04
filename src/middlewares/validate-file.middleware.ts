@@ -3,9 +3,11 @@ import { NextFunction, Request, Response } from "express";
 import { Schema } from "joi";
 import { Schedule } from "@prisma/client";
 
+import { JoiHelper } from "../helpers";
+
 import { CustomError } from "../errors/custom.error";
 
-export const validateFile = (schema: Schema) => {
+export const validateScheduleFile = (schema: Schema) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
       const file = req.file as Express.Multer.File | undefined;
@@ -16,8 +18,10 @@ export const validateFile = (schema: Schema) => {
 
       const schedulesAsString: string = file.buffer.toString();
 
-      if (schedulesAsString.trim() === "") {
-        throw CustomError.badRequest("El archivo JSON está vacío.");
+      if (schedulesAsString.trim().length === 0) {
+        throw CustomError.badRequest(
+          "Lo sentimos, pero el archivo JSON que se ha proporcionado no es válido."
+        );
       }
 
       const schedules: Schedule[] = JSON.parse(schedulesAsString);
@@ -34,26 +38,9 @@ export const validateFile = (schema: Schema) => {
         );
       }
 
-      for (const index in schedules) {
-        const schedule = schedules[index];
+      const message: string | null = JoiHelper.validate(schema, schedules);
 
-        const { error } = schema.validate(schedule);
-
-        if (error) {
-          const { details } = error;
-
-          const message: string = details
-            .map(
-              (detail) =>
-                `${detail.message.replace(/['"]/g, "")} - [Posición]: ${
-                  parseInt(index) + 1
-                }`
-            )
-            .join("|");
-
-          throw CustomError.badRequest(message);
-        }
-      }
+      if (message) throw CustomError.badRequest(message);
 
       next();
     } catch (error) {

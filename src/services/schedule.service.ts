@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Schedule } from "@prisma/client";
 
-import { GetSchedulesDto } from "../dtos";
+import { GetSchedulesDto, UpdateSchedulesDto } from "../dtos";
 
 export class ScheduleService {
   private readonly prisma: PrismaClient;
@@ -39,6 +39,58 @@ export class ScheduleService {
       limit,
       totalItems: scheduleCounter,
       data: schedules,
+    };
+  }
+
+  public async updateSchedules(updateSchedulesDto: UpdateSchedulesDto) {
+    const { schedules } = updateSchedulesDto;
+
+    const updatedSchedules: Promise<Schedule | null>[] = schedules.map(
+      async (newSchedule) => {
+        const scheduleFound: Schedule | null =
+          await this.prisma.schedule.findFirst({
+            where: {
+              city: {
+                contains: newSchedule.city,
+              },
+              sector: {
+                contains: newSchedule.sector,
+              },
+            },
+          });
+
+        if (!scheduleFound) return newSchedule;
+
+        await this.prisma.schedule.update({
+          where: {
+            id: scheduleFound.id,
+          },
+          data: {
+            schedule: newSchedule.schedule,
+            lastUpdate: newSchedule.lastUpdate && new Date(newSchedule.lastUpdate),
+            link: newSchedule.link,
+          },
+        });
+
+        return null;
+      }
+    );
+
+    const mismatchedSchedules: (Schedule | null)[] = await Promise.all(
+      updatedSchedules
+    );
+
+    const filteredMismatched = mismatchedSchedules.filter(
+      Boolean
+    ) as Schedule[];
+
+    const scheduleCounter: number = schedules.length;
+    const updatedCounter: number = scheduleCounter - filteredMismatched.length;
+
+    return {
+      status: true,
+      message: `Se han actualizado exitosamente ${updatedCounter} de ${scheduleCounter} horarios.`,
+      data: filteredMismatched,
     };
   }
 }
