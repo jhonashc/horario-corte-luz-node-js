@@ -4,6 +4,7 @@ export * from "./auth/register-user.schema";
 export * from "./file/upload-file.schema";
 
 export * from "./schedule/schedule-query.schema";
+export * from "./schedule/update-schedules.schema";
 
 export * from "./shared/pagination.schema";
 
