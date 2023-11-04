@@ -1,8 +1,6 @@
 export * from "./auth/login-user.schema";
 export * from "./auth/register-user.schema";
 
-export * from "./file/upload-file.schema";
-
 export * from "./schedule/schedule-query.schema";
 export * from "./schedule/update-schedules.schema";
 
